@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AID — Simplify Expressions Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&family=Tangerine:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<!-- جرّاس الإنذار: بيظل inline عمداً عشان يكشف لو script.js نفسه مش موجود أو فيه خطأ -->
+<script>
+(function(){
+  var errs=[];
+  window.addEventListener('error', function(e){ if(e && e.message) errs.push(String(e.message)); });
+  window.addEventListener('load', function(){
+    if(!window.AID_LOADED){
+      var b=document.createElement('div');
+      b.setAttribute('style','position:fixed;top:0;left:0;right:0;z-index:999;background:#7a2e1d;color:#fff;padding:10px 16px;font:600 13px sans-serif;text-align:center');
+      b.textContent='script.js did not load — make sure script.js and style.css sit in the same folder as index.html.';
+      document.body.appendChild(b);
+      return;
+    }
+    if(!errs.length) return;
+    var b2=document.createElement('div');
+    b2.setAttribute('style','position:fixed;top:0;left:0;right:0;z-index:999;background:#7a2e1d;color:#fff;padding:10px 16px;font:600 13px sans-serif;text-align:center');
+    b2.textContent='CODE ERROR in script.js: ' + errs[0];
+    document.body.appendChild(b2);
+  });
+})();
+</script>
+</head>
+<body>
+
+<header id="topbar" class="hidden">
+  <div class="tb-left">
+    <span class="tb-logo">A<span>I</span>D</span>
+    <span class="tb-emb" id="tbEmblem"></span>
+    <span class="tb-lesson" id="tbLesson"></span>
+  </div>
+  <div class="tb-right">
+    <span class="tb-timer" id="tbTimer">00:00</span>
+    <button class="icon-btn" id="btnMute" title="Sound on/off"></button>
+    <button class="icon-btn" id="btnFull" title="Fullscreen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- SPLASH -->
+  <section id="scr-splash" class="screen on">
+    <div class="splash-inner">
+      <div class="logo-block">
+        <div class="logo-word">A<span>I</span>D</div>
+        <div class="logo-tag">Interactive Mathematics</div>
+        <div class="logo-rule"><span class="dm"></span></div>
+      </div>
+      <div class="splash-credit">Design by&nbsp;<b>Mr. Akram</b></div>
+      <button class="btn primary big" id="btnBegin" type="button">Begin</button>
+      <div class="splash-sub">A calculator-powered journey into simplifying expressions</div>
+    </div>
+  </section>
+
+  <!-- NAME + TEACHER -->
+  <section id="scr-name" class="screen">
+    <div class="panel narrow">
+      <div class="eyebrow">Before we begin</div>
+      <h1>Choose your coach</h1>
+      <div class="tchoose" id="teacherCards">
+        <button class="tcard" type="button" data-t="akram">
+          <span class="emb" data-emb="akram"></span>
+          <h3>Mr. Akram</h3>
+          <div class="ttag">The Compass · Foundations Track</div>
+          <div class="tchk">Selected</div>
+        </button>
+        <button class="tcard" type="button" data-t="mohamed">
+          <span class="emb" data-emb="mohamed"></span>
+          <h3>Mr. Mohamed</h3>
+          <div class="ttag">The Anchor · EST &amp; SAT Track</div>
+          <div class="tchk">Selected</div>
+        </button>
+      </div>
+      <h1 style="margin-top:1.8rem; font-size:1.5rem">What should we call you?</h1>
+      <p class="muted">Your name will appear on your certificates of achievement.</p>
+      <input id="inpName" class="big-input" maxlength="22" placeholder="Type your name…" autocomplete="off">
+      <div class="row center"><button class="btn primary big" id="btnName" type="button">Continue</button></div>
+    </div>
+  </section>
+
+  <!-- HUB -->
+  <section id="scr-hub" class="screen">
+    <div class="wrap">
+      <div class="hub-head">
+        <div>
+          <div class="eyebrow" id="hubHello">Welcome</div>
+          <h1 id="hubTitle">Training Path</h1>
+        </div>
+        <button class="btn ghost small" id="btnRename" type="button">Change name / teacher</button>
+      </div>
+      <div id="lessonList"></div>
+      <div class="hub-progress" id="hubProgress"></div>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section id="scr-intro" class="screen">
+    <div class="wrap-wide">
+      <button class="btn ghost small btn-back" id="btnIntroBack" type="button">&#8592;&nbsp; All lessons</button>
+      <div class="intro-head">
+        <div class="eyebrow" id="introChip"></div>
+        <h1 id="introTitle"></h1>
+        <p class="muted" id="introDesc"></p>
+      </div>
+      <div class="intro-grid">
+        <div class="card"><h2>The Skill</h2><ul id="skillList"></ul></div>
+        <div class="card method">
+          <h2>The Calculator Method</h2>
+          <ol id="methodList"></ol>
+          <div class="note"><b>Why these forbidden numbers?</b> Values like 0 and 1 can make two <i>different</i> expressions give the <i>same</i> result — that hides mistakes. A fresh number, used every time, never lies.</div>
+          <div class="method-actions">
+            <button class="btn ghost small" id="btnCalcTry" type="button">
+              <svg style="width:16px;height:16px;vertical-align:-3px;margin-right:7px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h.01M8 14h2M12 14h2M16 14h.01M8 18h2M12 18h2M16 18h.01"/></svg>
+              <span id="btnCalcTryLbl">Hide Calculator</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="intro-grid2">
+        <div class="card"><h2>Worked Example — solved exactly this way</h2><div id="workedBox"></div></div>
+        <aside class="calc-side" id="introCalcSlot">
+          <button class="calc-launch" id="introCalcLaunch" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h.01M8 14h2M12 14h2M16 14h.01M8 18h2M12 18h2M16 18h.01"/></svg>
+            <span>Open the Calculator</span>
+          </button>
+        </aside>
+      </div>
+      <div class="row center"><button class="btn primary big" id="btnStartLesson" type="button"></button></div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="scr-quiz" class="screen">
+    <div class="quiz-layout">
+      <div class="quiz-main">
+        <div class="q-meta">
+          <span class="chip" id="qLessonChip"></span>
+          <span class="chip plain" id="qNum"></span>
+          <div class="q-progress"><div class="q-progress-fill" id="qFill"></div><div class="q-ticks" id="qTicks"></div></div>
+        </div>
+        <div class="q-card">
+          <div class="q-prompt" id="qPrompt">Simplify the expression</div>
+          <div class="q-expr" id="qExpr"></div>
+          <div class="q-options" id="qOpts"></div>
+          <div class="q-actions">
+            <button class="btn ghost" id="btnHint" type="button">
+              <svg style="width:17px;height:17px;vertical-align:-3px;margin-right:7px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>
+              Hint <span class="pill" id="hintCount">2</span>
+            </button>
+            <button class="btn ghost" id="btnCalc" type="button">
+              <svg style="width:17px;height:17px;vertical-align:-3px;margin-right:7px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h.01M8 14h2M12 14h2M16 14h.01M8 18h2M12 18h2M16 18h.01"/></svg>
+              <span id="btnCalcLbl">Hide Calculator</span>
+            </button>
+            <button class="btn ghost" id="btnStop" type="button" style="display:none">End Lesson Early</button>
+          </div>
+          <div class="hint-box" id="hintBox" hidden></div>
+          <div class="feedback" id="feedback" hidden></div>
+        </div>
+      </div>
+      <aside class="calc-side" id="quizCalcSlot">
+        <button class="calc-launch" id="quizCalcLaunch" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h.01M8 14h2M12 14h2M16 14h.01M8 18h2M12 18h2M16 18h.01"/></svg>
+          <span>Open the Calculator</span>
+        </button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- STOP MODAL -->
+  <div id="stopModal" class="stop-back">
+    <div class="stop-card">
+      <div class="eyebrow">Paused</div>
+      <h2 style="margin-bottom:0">Checkpoint</h2>
+      <div class="mini-stats" id="stopStats"></div>
+      <p class="muted" style="font-size:.85rem; line-height:1.6">Keep going for the full lesson report — or end now and take the complete report immediately. Exiting to lessons will not save this run.</p>
+      <div class="row center" style="margin-top:1.2rem">
+        <button class="btn primary" id="stopKeep" type="button">Keep Going</button>
+        <button class="btn ghost" id="stopFinish" type="button">End &amp; See Report</button>
+        <button class="btn ghost" id="stopExit" type="button">Exit to Lessons</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GHOST SETUP -->
+  <section id="scr-ghost-setup" class="screen">
+    <div class="panel narrow" style="max-width:660px">
+      <div class="eyebrow">Ghost Mode</div>
+      <h1>Vertical Duel</h1>
+      <p class="muted">Two students stand on opposite sides of the device. The screen splits top and bottom — <b>each half is rotated to face its own player</b>, so both read the same question right-side-up at the same time. Every question gets <b>2 minutes</b>. Lock in a <b>correct</b> answer first and your rival gets only <b>10 seconds</b>; if your first answer is <b>wrong</b>, the rival keeps the full remaining time. No hints, no calculator — the winner is decided by <b>correct answers</b>, then by <b>total answering time</b>.</p>
+      <div class="gm-field"><label>The Duelists</label><div id="gmNames"></div></div>
+      <div class="gm-field"><label>Duel questions</label><div class="seg" id="gmCount"></div></div>
+      <div class="row center">
+        <button class="btn primary big" id="gmStart" type="button">Start the Duel</button>
+      </div>
+      <div class="row center" style="margin-top:.8rem"><button class="btn ghost small" id="gmBack" type="button">&#8592;&nbsp; All lessons</button></div>
+    </div>
+  </section>
+
+  <!-- GHOST DUEL — فوق مقلوب للطالب الواقف فوق / تحت معدول للطالب الواقف تحت -->
+  <section id="scr-ghost-duel" class="screen">
+    <div class="dv-mid">
+      <span class="chip">Ghost Duel</span>
+      <span class="chip plain" id="duelQNum">Q 1/10</span>
+      <span class="dv-turn" id="duelTurn">2 minutes · first correct takes the point</span>
+      <button class="btn ghost small" id="btnDuelAbort" type="button">Abort</button>
+    </div>
+    <div class="dv-timer"><div class="dv-timer-fill" id="duelQBar"></div></div>
+    <div class="duelv">
+      <div class="dv-half top" id="dvTop">
+        <div class="dv-head"><span class="dv-name" id="dvTName">Player 1</span><span class="dv-score" id="dvTScore">0</span></div>
+        <div class="dv-expr" id="dvTExpr"></div>
+        <div class="dv-opts" id="dvTOpts"></div>
+        <div class="dv-stat" id="dvTStat">Your move…</div>
+      </div>
+      <div class="dv-half bottom" id="dvBottom">
+        <div class="dv-head"><span class="dv-name" id="dvBName">Player 2</span><span class="dv-score" id="dvBScore">0</span></div>
+        <div class="dv-expr" id="dvBExpr"></div>
+        <div class="dv-opts" id="dvBOpts"></div>
+        <div class="dv-stat" id="dvBStat">Your move…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GHOST RESULTS -->
+  <section id="scr-ghost-results" class="screen">
+    <div class="wrap">
+      <div class="res-head">
+        <div id="grMedal"></div>
+        <div>
+          <div class="eyebrow">Ghost Mode</div>
+          <h1 id="grTitle">Duel Complete</h1>
+          <div id="grPraise" style="margin-top:.4rem" class="muted"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:1.2rem">
+        <h2>Champion</h2>
+        <div class="champ-row"><span class="emb-s" id="grChampEmb"></span>
+          <div><div class="champ-name" id="grChampName"></div><div class="muted" id="grChampStats"></div></div></div>
+      </div>
+      <div class="card" style="margin-bottom:1.2rem"><h2>Final Standings</h2><div id="gmTable"></div></div>
+      <div class="cert-outer">
+        <div class="cert" id="ghostCert">
+          <div class="cert-border">
+            <div class="cert-brand">A<span>I</span>D &nbsp;MATHEMATICS ACADEMY</div>
+            <h3>Ghost Mode Champion</h3>
+            <p class="cert-p">This certificate is proudly presented to</p>
+            <div class="cert-name" id="gcName"></div>
+            <p class="cert-p">for out-dueling every rival in the vertical Ghost Mode challenge</p>
+            <div class="cert-stats" id="gcStats"></div>
+            <div class="cert-foot">
+              <div><span class="cert-emb" id="gcEmb"></span><div class="sig">Mr. Akram</div><div class="sig-line"></div><div class="sig-role">Founder &amp; Designer</div></div>
+              <svg class="cert-seal" viewBox="0 0 120 120">
+                <defs><path id="sealring2" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+                <circle cx="60" cy="60" r="52" fill="none" stroke="#a5843f" stroke-width="3"/>
+                <circle cx="60" cy="60" r="36" fill="none" stroke="#a5843f" stroke-width="1.6"/>
+                <text font-size="10.5" fill="#8a6a2a" font-weight="700" letter-spacing="2.5"><textPath href="#sealring2">AID ACADEMY &#8226; GHOST MODE &#8226; CHAMPION &#8226;</textPath></text>
+                <text x="60" y="66" text-anchor="middle" font-family="Fraunces,serif" font-size="19" font-weight="700" fill="#7c5b1c" letter-spacing="2">AID</text>
+              </svg>
+              <div><div id="gcDate" class="mth" style="font-size:1.05rem;color:#3a2f1c"></div><div class="sig-line"></div><div class="sig-role">Date</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row center">
+        <button class="btn primary big" id="btnGhostPrint" type="button">Print Champion Certificate</button>
+        <button class="btn ghost big" id="btnGhostRematch" type="button">Rematch</button>
+        <button class="btn ghost big" id="btnGhostExit" type="button">All Lessons</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="scr-game" class="screen">
+    <div class="wrap">
+      <div class="game-head">
+        <div><div class="eyebrow">Brain Break</div><h1 id="gameTitle"></h1></div>
+        <div class="game-hud" id="gameHud"></div>
+      </div>
+      <div class="game-stage">
+        <canvas id="gameCv" width="960" height="540"></canvas>
+        <div class="g-overlay" id="gameOverlay">
+          <div class="g-box">
+            <h2 id="gOvTitle"></h2>
+            <p id="gOvText"></p>
+            <button class="btn primary big" id="gOvBtn" type="button">Play</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="scr-results" class="screen">
+    <div class="wrap">
+      <div class="res-head">
+        <div id="resMedal"></div>
+        <div>
+          <div class="eyebrow" id="resChip">Lesson Complete</div>
+          <h1 id="resTitle"></h1>
+          <div id="resPraise"></div>
+        </div>
+      </div>
+      <div id="perfectBox"></div>
+      <div class="res-stats" id="resStats"></div>
+      <div class="rule-line" id="ruleLine"></div>
+      <div class="card" id="mistakesCard">
+        <h2>Exactly Where You Slipped</h2>
+        <div id="mistakesList"></div>
+      </div>
+      <div class="card" id="leaderCard" style="margin-top:1.2rem">
+        <h2>Class Leaderboard</h2>
+        <div class="leader" id="leaderList"></div>
+      </div>
+      <div class="cert-outer">
+        <div class="cert" id="certCard">
+          <div class="cert-border">
+            <div class="cert-brand">A<span>I</span>D &nbsp;MATHEMATICS ACADEMY</div>
+            <h3>Certificate of Achievement</h3>
+            <p class="cert-p">This certificate is proudly presented to</p>
+            <div class="cert-name" id="certName"></div>
+            <p class="cert-p">for successfully completing</p>
+            <div class="cert-lesson" id="certLesson"></div>
+            <div class="cert-stats" id="certStats"></div>
+            <div class="cert-foot">
+              <div><span class="cert-emb" id="sigEmb"></span><div class="sig" id="sigName">Mr. Akram</div><div class="sig-line"></div><div class="sig-role" id="sigRole">Founder &amp; Designer</div></div>
+              <svg class="cert-seal" viewBox="0 0 120 120">
+                <defs><path id="sealring" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+                <circle cx="60" cy="60" r="52" fill="none" stroke="#a5843f" stroke-width="3"/>
+                <circle cx="60" cy="60" r="36" fill="none" stroke="#a5843f" stroke-width="1.6"/>
+                <text font-size="10.5" fill="#8a6a2a" font-weight="700" letter-spacing="2.5"><textPath href="#sealring">AID ACADEMY &#8226; EXCELLENCE &#8226; MATHEMATICS &#8226;</textPath></text>
+                <text x="60" y="66" text-anchor="middle" font-family="Fraunces,serif" font-size="19" font-weight="700" fill="#7c5b1c" letter-spacing="2">AID</text>
+              </svg>
+              <div><div id="certDate" class="mth" style="font-size:1.05rem;color:#3a2f1c"></div><div class="sig-line"></div><div class="sig-role">Date</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row center">
+        <button class="btn primary big" id="btnPrint" type="button">Print Certificate</button>
+        <button class="btn ghost big" id="btnRetry" type="button">Retry Lesson</button>
+        <button class="btn ghost big" id="btnHub" type="button">All Lessons</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- الآلة (مش بتظهر في الجوست خالص) -->
+<div id="calcHolder">
+  <div id="casio" tabindex="0" aria-label="Scientific calculator">
+    <div class="cz-body">
+      <div class="cz-head">
+        <div class="cz-brand">AID<span class="cz-model">fx-991 TR &middot; NATURAL DISPLAY</span></div>
+        <div class="cz-solar" aria-hidden="true"></div>
+      </div>
+      <div class="cz-bezel">
+        <div class="cz-lcd">
+          <div class="cz-status">
+            <span id="indShift">SHIFT</span><span id="indAlpha">ALPHA</span>
+            <span id="indSto">STO</span><span id="indM">M</span><span id="indX">X</span>
+            <span class="cz-comp">COMP</span>
+          </div>
+          <div class="cz-line1" id="czLine1"></div>
+          <div class="cz-line2" id="czLine2"></div>
+        </div>
+      </div>
+      <div class="cz-keys" id="czKeys"></div>
+    </div>
+    <div class="cz-coach">
+      <div><b>ALPHA</b> + <span class="mth">)</span> types <span class="mth"><i class="vx">x</i></span> &nbsp;&middot;&nbsp; <b>CALC</b> asks for <span class="mth"><i class="vx">x</i></span> &nbsp;&middot;&nbsp; <b>=</b> shows the result — keep it in your head &nbsp;&middot;&nbsp; <b>&#9664;&#9654;</b> REPLAY edits mistakes</div>
+      <div id="czAvoid" class="cz-avoid"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="printOnly"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
