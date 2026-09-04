@@ -1045,6 +1045,19 @@ var GAMES=[
    desc:'Mental math at full speed: multiplication and division, four options, 45 seconds. Every correct answer in a row multiplies your points!',
    run:quickCalcGame }
 ];
+function ensureGameSkip(){
+  var sk=document.getElementById('gFloatSkip');
+  if(!sk){
+    sk=document.createElement('button');
+    sk.id='gFloatSkip';
+    sk.type='button';
+    sk.className='btn ghost small';
+    sk.textContent='Skip game \u00bb';
+    sk.style.display='none';
+    document.body.appendChild(sk);
+  }
+  return sk;
+}
 function startBreak(){
   Timer.pause();
   var g=GAMES[QZ.breakIdx%GAMES.length]; QZ.breakIdx++;
@@ -1053,6 +1066,15 @@ function startBreak(){
   var ov=$('#gameOverlay'); ov.classList.add('on');
   $('#gOvTitle').textContent=g.name;
   $('#gOvText').innerHTML=g.desc;
+  var skip=ensureGameSkip();
+  skip.style.display='';
+  function leaveGame(){
+    skip.style.display='none';
+    stopGameLoop();
+    ov.classList.remove('on');
+    Timer.resume(); show('scr-quiz'); renderQ();
+  }
+  skip.onclick=function(){ leaveGame(); toast('Game skipped \u2014 back to the questions.'); };
   var btn=$('#gOvBtn'); btn.textContent='Play';
   btn.onclick=function(){
     ov.classList.remove('on'); AudioFX.ensure();
@@ -1061,9 +1083,10 @@ function startBreak(){
       $('#gOvTitle').textContent='Great break!';
       $('#gOvText').innerHTML=res;
       var b=$('#gOvBtn'); b.textContent='Continue Lesson';
-      b.onclick=function(){ ov.classList.remove('on'); stopGameLoop(); Timer.resume(); show('scr-quiz'); renderQ(); };
+      b.onclick=leaveGame;
     });
   };
+  if(window.innerWidth<700) toast('Tip: rotate your phone for a bigger game');
   show('scr-game');
 }
 function shapePath(ctx,type,s){

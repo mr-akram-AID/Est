@@ -333,13 +333,18 @@ h3{font-family:var(--fs); font-weight:600}
 /* ===== Game ===== */
 .game-head{display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap}
 .game-hud{font-family:var(--fm); font-size:1.25rem; color:var(--gold-hi)}
-.game-stage{position:relative; background:#131009; border:1px solid var(--line2); border-radius:18px; overflow:hidden; max-width:1080px; margin:0 auto}
-#gameCv{display:block; width:100%; height:auto; touch-action:none; cursor:crosshair}
-.g-overlay{position:absolute; inset:0; background:rgba(12,9,6,.86); display:none; place-items:center; text-align:center; padding:1.5rem}
-.g-overlay.on{display:grid}
-.g-box{max-width:560px}
-.g-box h2{font-size:clamp(1.5rem,4vw,2.2rem); color:var(--ink); font-family:var(--fs); margin-bottom:0}
-.g-box p{color:var(--muted); line-height:1.7; margin:.9rem 0 1.5rem; font-size:1.02rem}
+.game-stage{position:relative; background:#131009; border:1px solid var(--line2); border-radius:18px; overflow:hidden;
+  max-width:1080px; margin:0 auto; min-height:360px; display:flex; align-items:center; justify-content:center}
+#gameCv{display:block; width:100%; height:auto; max-width:100%; touch-action:none; cursor:crosshair}
+.g-overlay{position:absolute; inset:0; background:rgba(12,9,6,.9); display:none; text-align:center; padding:1rem;
+  overflow-y:auto; -webkit-overflow-scrolling:touch; z-index:2}
+.g-overlay.on{display:flex}
+.g-box{max-width:560px; width:100%; margin:auto; padding:.5rem 0}
+.g-box h2{font-size:clamp(1.35rem,4vw,2.1rem); color:var(--ink); font-family:var(--fs); margin-bottom:0}
+.g-box p{color:var(--muted); line-height:1.6; margin:.8rem 0 1.2rem; font-size:.97rem}
+.g-box .btn{min-height:64px; min-width:220px; font-size:1.15rem}
+@media(max-width:560px){ .g-box .btn{width:100%; min-width:0} }
+#gFloatSkip{position:fixed; right:16px; bottom:16px; z-index:82}
 
 /* ===== Results ===== */
 .res-head{display:flex; align-items:center; gap:1.6rem; margin-bottom:1.6rem; flex-wrap:wrap}
