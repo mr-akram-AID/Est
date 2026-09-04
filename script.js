@@ -1045,19 +1045,6 @@ var GAMES=[
    desc:'Mental math at full speed: multiplication and division, four options, 45 seconds. Every correct answer in a row multiplies your points!',
    run:quickCalcGame }
 ];
-function ensureGameSkip(){
-  var sk=document.getElementById('gFloatSkip');
-  if(!sk){
-    sk=document.createElement('button');
-    sk.id='gFloatSkip';
-    sk.type='button';
-    sk.className='btn ghost small';
-    sk.textContent='Skip game \u00bb';
-    sk.style.display='none';
-    document.body.appendChild(sk);
-  }
-  return sk;
-}
 function startBreak(){
   Timer.pause();
   var g=GAMES[QZ.breakIdx%GAMES.length]; QZ.breakIdx++;
@@ -1065,29 +1052,50 @@ function startBreak(){
   $('#gameHud').textContent='';
   var ov=$('#gameOverlay'); ov.classList.add('on');
   $('#gOvTitle').textContent=g.name;
-  $('#gOvText').innerHTML=g.desc;
-  var skip=ensureGameSkip();
-  skip.style.display='';
+  $('#gOvText').innerHTML=g.desc+' <span style="color:#a6997e">(starts in 2 seconds \u2014 skip anytime)</span>';
+  var btn=$('#gOvBtn'); btn.textContent='Play now';
+
+  /* Floating skip button (defined in index.html) */
+  var sk=$('#gFloatSkip');
+
+  /* AUTO-RETURN timer: hard limit of 45 seconds for the whole break */
+  var autoT=setTimeout(leaveGame, 45000);
+
+  /* Leave the game and go back to the questions */
   function leaveGame(){
-    skip.style.display='none';
+    clearTimeout(autoT);
     stopGameLoop();
+    if(sk) sk.style.display='none';
     ov.classList.remove('on');
     Timer.resume(); show('scr-quiz'); renderQ();
   }
-  skip.onclick=function(){ leaveGame(); toast('Game skipped \u2014 back to the questions.'); };
-  var btn=$('#gOvBtn'); btn.textContent='Play';
-  btn.onclick=function(){
+
+  /* Show the skip button and wire it */
+  if(sk){ sk.style.display=''; sk.onclick=leaveGame; }
+
+  /* The game begins by itself after 2 seconds */
+  var runT=setTimeout(beginGame, 2000);
+
+  function beginGame(){
+    clearTimeout(runT);
     ov.classList.remove('on'); AudioFX.ensure();
     g.run(function(res){
       ov.classList.add('on');
       $('#gOvTitle').textContent='Great break!';
       $('#gOvText').innerHTML=res;
-      var b=$('#gOvBtn'); b.textContent='Continue Lesson';
+      var b=$('#gOvBtn'); b.textContent='Continue';
       b.onclick=leaveGame;
+      /* If the student never taps Continue, return after 5 seconds */
+      clearTimeout(autoT);
+      autoT=setTimeout(leaveGame, 5000);
     });
-  };
-  if(window.innerWidth<700) toast('Tip: rotate your phone for a bigger game');
+  }
+
+  /* Tapping Play now starts immediately */
+  btn.onclick=beginGame;
+
   show('scr-game');
+  toast('Break! Auto-continues \u2014 or tap Skip.');
 }
 function shapePath(ctx,type,s){
   ctx.beginPath();

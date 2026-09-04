@@ -331,20 +331,22 @@ h3{font-family:var(--fs); font-weight:600}
 .cz-avoid b{color:#e08a6f}
 
 /* ===== Game ===== */
-.game-head{display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap}
+.game-head{display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; margin-bottom:.6rem; flex-wrap:wrap}
 .game-hud{font-family:var(--fm); font-size:1.25rem; color:var(--gold-hi)}
-.game-stage{position:relative; background:#131009; border:1px solid var(--line2); border-radius:18px; overflow:hidden;
-  max-width:1080px; margin:0 auto; min-height:360px; display:flex; align-items:center; justify-content:center}
-#gameCv{display:block; width:100%; height:auto; max-width:100%; touch-action:none; cursor:crosshair}
-.g-overlay{position:absolute; inset:0; background:rgba(12,9,6,.9); display:none; text-align:center; padding:1rem;
-  overflow-y:auto; -webkit-overflow-scrolling:touch; z-index:2}
+.game-stage{position:relative; background:#131009; border:1px solid var(--line2); border-radius:14px; overflow:hidden;
+  max-width:1080px; margin:0 auto; width:100%;}
+#gameCv{display:block; width:100%; height:auto; touch-action:none; cursor:crosshair}
+.g-overlay{position:absolute; inset:0; background:rgba(12,9,6,.94); display:none; text-align:center;
+  padding:1rem; overflow-y:auto; -webkit-overflow-scrolling:touch; z-index:2;
+  align-items:center; justify-content:center}
 .g-overlay.on{display:flex}
-.g-box{max-width:560px; width:100%; margin:auto; padding:.5rem 0}
-.g-box h2{font-size:clamp(1.35rem,4vw,2.1rem); color:var(--ink); font-family:var(--fs); margin-bottom:0}
-.g-box p{color:var(--muted); line-height:1.6; margin:.8rem 0 1.2rem; font-size:.97rem}
-.g-box .btn{min-height:64px; min-width:220px; font-size:1.15rem}
-@media(max-width:560px){ .g-box .btn{width:100%; min-width:0} }
-#gFloatSkip{position:fixed; right:16px; bottom:16px; z-index:82}
+.g-box{max-width:520px; width:100%; margin:auto; padding:.4rem 0}
+.g-box h2{font-size:clamp(1.3rem,5vw,2rem); color:var(--ink); font-family:var(--fs); margin-bottom:0}
+.g-box p{color:var(--muted); line-height:1.6; margin:.7rem 0 1.1rem; font-size:1rem}
+.g-box .btn{min-height:60px; min-width:200px; font-size:1.1rem}
+@media(max-width:520px){ .g-box .btn{width:100%; min-width:0} }
+#gFloatSkip{position:fixed; right:14px; bottom:14px; z-index:82; min-height:48px; min-width:120px;
+  background:rgba(33,26,19,.95); font-size:.9rem}
 
 /* ===== Results ===== */
 .res-head{display:flex; align-items:center; gap:1.6rem; margin-bottom:1.6rem; flex-wrap:wrap}
