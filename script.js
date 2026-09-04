@@ -471,6 +471,26 @@ var METHOD_STEPS = [
 ];
 
 /* ---------------- Storage ---------------- */
+var SCORE_WEBHOOK='https://script.google.com/macros/s/AKfycbzCxaazPm07ytgMgYht-oDnMjzlYALSyiMQgY1mURBR6ccCLGGwIXgXRPGHKgs-iK0N/exec';
+function sendScoreToSheet(d){
+  try{
+    if(!SCORE_WEBHOOK) return;
+    fetch(SCORE_WEBHOOK,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({
+        name:d.name||'Unknown',
+        teacher:d.teacher||'',
+        lesson:d.lesson||'',
+        score:d.score||0,
+        total:d.total||0,
+        time:d.time||'',
+        rank:d.rank||''
+      })
+    });
+  }catch(e){}
+}
 var PKEY='aidAcademyV5';
 var P = { name:'', teacher:'akram', completed:{} };
 try{
@@ -1751,6 +1771,15 @@ function finishLesson(early){
   if(!prev || QZ.score>prev.score || (QZ.score===prev.score && time<prev.time)){
     P.completed[L.id]={score:QZ.score, errors:errors, time:time, rank:place.rank, total:total}; saveP();
   }
+   sendScoreToSheet({
+    name:P.name,
+    teacher:TEACHER_META[P.teacher].name,
+    lesson:(L.master? 'Master' : 'Lesson '+L.num)+' \u2014 '+String(L.title).replace(/&amp;/g,'&'),
+    score:QZ.score,
+    total:total,
+    time:fmtTime(time),
+    rank:place.rank
+  });
   renderResults(L,{total:total,time:time,errors:errors,place:place,early:early});
   show('scr-results');
   AudioFX.fanfare();
@@ -1995,6 +2024,17 @@ function duelEnd(){
 function ghostResults(){
   var ranked=GM.results.slice().sort(function(x,y){ return y.score-x.score || x.time-y.time; });
   var w=ranked[0], l=ranked[ranked.length-1];
+    ranked.forEach(function(p){
+    sendScoreToSheet({
+      name:p.name,
+      teacher:'Ghost Duel',
+      lesson:'Duel \u2014 '+p.total+' questions',
+      score:p.score,
+      total:p.total,
+      time:fmtTime(p.time),
+      rank:(p===w? 'Champion' : 'Rival')
+    });
+  });
   $('#grMedal').innerHTML=medalSVG('gold');
   $('#grTitle').textContent='Duel Complete';
   $('#grPraise').textContent=w.name+' wins '+w.score+'\u2013'+l.score+' against '+l.name+'. The champion answered everything in a total of '+fmtTime(w.time)+' \u2014 duel ran for '+fmtTime(Timer.elapsed())+'.';
