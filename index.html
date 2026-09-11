@@ -15,14 +15,14 @@
   window.addEventListener('load', function(){
     if(!window.AID_LOADED){
       var b=document.createElement('div');
-      b.setAttribute('style','position:fixed;top:0;left:0;right:0;z-index:999;background:#7a2e1d;color:#fff;padding:10px 16px;font:600 13px sans-serif;text-align:center');
+b.setAttribute('style','position:fixed;top:0;left:0;right:0;z-index:999;background:#7a2e1d;color:#fff;padding:10px 16px;font:600 13px sans-serif;text-align:center');
       b.textContent='script.js did not load — make sure script.js and style.css sit in the same folder as index.html.';
       document.body.appendChild(b);
       return;
     }
     if(!errs.length) return;
     var b2=document.createElement('div');
-    b2.setAttribute('style','position:fixed;top:0;left:0;right:0;z-index:999;background:#7a2e1d;color:#fff;padding:10px 16px;font:600 13px sans-serif;text-align:center');
+b2.setAttribute('style','position:fixed;top:0;left:0;right:0;z-index:999;background:#7a2e1d;color:#fff;padding:10px 16px;font:600 13px sans-serif;text-align:center');
     b2.textContent='CODE ERROR in script.js: ' + errs[0];
     document.body.appendChild(b2);
   });
@@ -30,7 +30,6 @@
 </script>
 </head>
 <body>
-
 <header id="topbar" class="hidden">
   <div class="tb-left">
     <span class="tb-logo">A<span>I</span>D</span>
@@ -45,7 +44,6 @@
     </button>
   </div>
 </header>
-
 <main>
   <!-- SPLASH -->
   <section id="scr-splash" class="screen on">
@@ -60,7 +58,6 @@
       <div class="splash-sub">A calculator-powered journey into equivalent expressions</div>
     </div>
   </section>
-
   <!-- NAME + TEACHER -->
   <section id="scr-name" class="screen">
     <div class="panel narrow">
@@ -86,7 +83,6 @@
       <div class="row center"><button class="btn primary big" id="btnName" type="button">Continue</button></div>
     </div>
   </section>
-
   <!-- HUB -->
   <section id="scr-hub" class="screen">
     <div class="wrap">
@@ -101,7 +97,6 @@
       <div class="hub-progress" id="hubProgress"></div>
     </div>
   </section>
-
   <!-- INTRO -->
   <section id="scr-intro" class="screen">
     <div class="wrap-wide">
@@ -137,7 +132,6 @@
       <div class="row center"><button class="btn primary big" id="btnStartLesson" type="button"></button></div>
     </div>
   </section>
-
   <!-- QUIZ -->
   <section id="scr-quiz" class="screen">
     <div class="quiz-layout">
@@ -174,7 +168,6 @@
       </aside>
     </div>
   </section>
-
   <!-- STOP MODAL -->
   <div id="stopModal" class="stop-back">
     <div class="stop-card">
@@ -189,7 +182,6 @@
       </div>
     </div>
   </div>
-
   <!-- GHOST SETUP -->
   <section id="scr-ghost-setup" class="screen">
     <div class="panel narrow" style="max-width:660px">
@@ -204,7 +196,6 @@
       <div class="row center" style="margin-top:.8rem"><button class="btn ghost small" id="gmBack" type="button">&#8592;&nbsp; All lessons</button></div>
     </div>
   </section>
-
   <!-- GHOST DUEL — top half rotated for the player standing above, bottom half upright -->
   <section id="scr-ghost-duel" class="screen">
     <div class="dv-mid">
@@ -229,7 +220,6 @@
       </div>
     </div>
   </section>
-
   <!-- GHOST RESULTS -->
   <section id="scr-ghost-results" class="screen">
     <div class="wrap">
@@ -277,7 +267,6 @@
       </div>
     </div>
   </section>
-
   <!-- GAME -->
   <section id="scr-game" class="screen">
     <div class="wrap">
@@ -297,7 +286,6 @@
       </div>
     </div>
   </section>
-
   <!-- RESULTS -->
   <section id="scr-results" class="screen">
     <div class="wrap">
@@ -352,7 +340,6 @@
     </div>
   </section>
 </main>
-
 <!-- The calculator (never visible during Ghost duels) -->
 <div id="calcHolder">
   <div id="casio" tabindex="0" aria-label="Scientific calculator">
@@ -380,14 +367,12 @@
     </div>
   </div>
 </div>
-
 <button id="gFloatSkip" class="btn ghost small" type="button" style="display:none">Skip game &#187;</button>
   <a id="waFloat" href="https://wa.me/201279441379?text=Hello%20Mr.%20Akram%2C%20I%20have%20a%20question%20about%20the%20AID%20Mathematics%20platform" target="_blank" rel="noopener" aria-label="WhatsApp Mr. Akram" title="WhatsApp Mr. Akram">
   <svg viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C9.4 3 4 8.4 4 15c0 2.6.8 5 2.3 7L4 29l7.2-2.2c1.9 1 4 1.6 6.3 1.6h.5c6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22h-.4c-2 0-4-.6-5.7-1.7l-.4-.2-4.3 1.3 1.3-4.2-.3-.4A9.9 9.9 0 0 1 5.1 15c0-5.5 4.5-10 10-10h.4c5.5 0 10 4.5 10 10s-4.5 9.9-10 10zm5.5-7.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.2-.2.3-.3.5-.5.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.2-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.2.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5 0 1.6-.6 1.8-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z"/></svg>
   </a>
   <div id="toast"></div>
 <div id="printOnly"></div>
-
 <script src="script.js"></script>
 </body>
 </html>
