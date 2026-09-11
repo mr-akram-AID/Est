@@ -112,7 +112,7 @@ function calcEval(src, x, ans, y){
     if(take('(')){ var v=expression(); ws(); if(!take(')')) fail('Syntax ERROR'); return v; }
     if(take('\u221a')){ ws(); if(!take('(')) fail('Syntax ERROR'); var r=expression(); ws(); if(!take(')')) fail('Syntax ERROR'); if(r<0) fail('Math ERROR'); return Math.sqrt(r); }
     if(take('log')){ ws(); if(!take('(')) fail('Syntax ERROR'); var l=expression(); ws(); if(!take(')')) fail('Syntax ERROR'); if(l<=0) fail('Math ERROR'); return Math.log10(l); }
-    if(take('ln')){ ws(); if(!take('(')) fail('Syntax ERROR'); var n=expression(); ws(); if(!take(')') fail('Syntax ERROR'); if(n<=0) fail('Math ERROR'); return Math.log(n); }
+        if(take('ln')){ ws(); if(!take('(')) fail('Syntax ERROR'); var n=expression(); ws(); if(!take(')')) fail('Syntax ERROR'); if(n<=0) fail('Math ERROR'); return Math.log(n); }
     if(take('Ans')) return (ans==null? 0 : ans);
     if(s[i]==='X'||s[i]==='x'){ if(x==null) fail('Syntax ERROR'); i++; return x; }
     if(s[i]==='Y'||s[i]==='y'){ if(y==null) fail('Syntax ERROR'); i++; return y; }
@@ -1660,7 +1660,7 @@ function renderHub(){
   var L=getLessons();
   var full=hasFullAccess();
   $('#hubHello').innerHTML='<span class="emb-xs">'+(EMBLEMS[P.teacher]||'')+'</span>Welcome, '+P.name;
-  $('#hubTitle').textContent=TEACHER_META[P.teacher].name+' \u2014 Factor or Not Factor';
+    $('#hubTitle').textContent=TEACHER_META[P.teacher].name+' \u2014 Equivalent Expressions';
   var doneCount=0, i;
   for(i=0;i<L.length;i++){ if(!L[i].master && P.completed[L[i].id]) doneCount++; }
   var masterOpen=(doneCount>=5 && full);
